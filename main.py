@@ -37,7 +37,7 @@ if __name__ == '__main__':
             d[th] = td
         data.append(d)
 
-    print(json.dumps(data))
+    print(data)
 
     # print([item.text.strip() for item in results.select('th') if item.text.strip().lower() != 'share event'])
     # print([(item.text.strip()) for item in results.select('td') if item.text.strip() != ''])
@@ -48,3 +48,19 @@ if __name__ == '__main__':
     # #     print(data)
     #
     # print(results.find_all('tr')[1].find_all('td'))
+
+    slack_message = "\n"
+    slack_message += "\n"
+    slack_message += '\n\t:star::star::star:Possible Upcoming ISS Flyby This Week:star::star::star:\n'
+    for message in data:
+        slack_message += "\n----------------------------------------------------------------------------------------\n "
+        slack_message += "\n :alarm_clock: Date={date} :star: Visible={visible} :mountain: Max Height={height} " \
+                         ":arrow_heading_up: Appears={app} :arrow_heading_down: Disappears={dpp} \n". \
+            format(
+            date=message.get("Date"), visible=message.get("Visible"), height=message.get("Max Height"),
+            app=message.get("Appears"), dpp=message.get("Disappears"))
+
+    slack_url = "slack webhook url"
+    payload = {"channel": "channel-name", "username": "username", "text": slack_message,
+               "icon_emoji": ":ghost:"}
+    requests.post(slack_url, json=payload)
